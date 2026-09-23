@@ -1,0 +1,85 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Dataset
+data = {
+    "Name": ["Aman", "Ravi", "Neha", "Priya", "Aman",
+             "Karan", "Riya", "Mohit", "Anjali", "Rahul",
+             "Sahil", "Pooja"],
+
+    "Age": [21, 25, 22, None, 21, 30, 28, 35, 24, 26, None, 29],
+
+    "City": ["Delhi", "Jaipur", "Kota", "Delhi", "Delhi",
+             "Mumbai", "Jaipur", "Kota", "Mumbai", "Delhi",
+             "Jaipur", "Kota"],
+
+    "Income": [25000, 32000, 28000, 35000, 25000, 50000,
+               42000, 60000, 30000, 38000, 45000, 52000],
+
+    "Spending": [60, 70, 55, 80, 60, 45,
+                 75, 40, 65, 72, 50, 85]
+}
+
+df = pd.DataFrame(data)
+
+print("Original Data")
+print(df)
+
+# Check missing values
+print("\nMissing Values")
+print(df.isnull().sum())
+
+# Fill missing age values
+df["Age"] = df["Age"].fillna(df["Age"].median())
+
+# Remove duplicate rows
+df = df.drop_duplicates()
+
+print("\nData after cleaning")
+print(df)
+
+# Check outliers using boxplot
+plt.figure(figsize=(7, 4))
+sns.boxplot(x=df["Income"])
+plt.title("Income Outliers")
+plt.show()
+
+# Age distribution
+plt.figure(figsize=(7, 4))
+plt.hist(df["Age"], bins=6)
+plt.title("Age Distribution")
+plt.xlabel("Age")
+plt.ylabel("Number of People")
+plt.show()
+
+# City-wise customers
+plt.figure(figsize=(7, 4))
+sns.countplot(data=df, x="City")
+plt.title("Customers by City")
+plt.xlabel("City")
+plt.ylabel("Number of Customers")
+plt.show()
+
+# Income and spending
+plt.figure(figsize=(7, 4))
+plt.scatter(df["Income"], df["Spending"])
+plt.title("Income vs Spending")
+plt.xlabel("Income")
+plt.ylabel("Spending Score")
+plt.show()
+
+# Correlation
+plt.figure(figsize=(6, 4))
+sns.heatmap(
+    df[["Age", "Income", "Spending"]].corr(),
+    annot=True
+)
+plt.title("Correlation")
+plt.show()
+
+# Save cleaned data
+df.to_csv("cleaned_data.csv", index=False)
+
+print("\nCleaned data saved successfully.")
+print("Total records:", len(df))
